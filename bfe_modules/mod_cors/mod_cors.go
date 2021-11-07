@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -79,7 +78,7 @@ func (m *ModuleCors) Name() string {
 	return m.name
 }
 
-func (m *ModuleCors) loadRuleData(query url.Values) (string, error) {
+func (m *ModuleCors) LoadConfData(query url.Values) error {
 	// get file path
 	path := query.Get("path")
 	if path == "" {
@@ -90,14 +89,15 @@ func (m *ModuleCors) loadRuleData(query url.Values) (string, error) {
 	// load from config file
 	conf, err := CorsRuleFileLoad(path)
 	if err != nil {
-		return "", fmt.Errorf("%s: CorsRuleFileLoad(%s) error: %v", m.name, path, err)
+		return  fmt.Errorf("%s: CorsRuleFileLoad(%s) error: %v", m.name, path, err)
 	}
 
 	// update to rule table
 	m.ruleTable.Update(conf)
 
-	_, fileName := filepath.Split(path)
-	return fmt.Sprintf("%s=%s", fileName, conf.Version), nil
+//	_, fileName := filepath.Split(path)
+//	fmt.Sprintf("%s=%s", fileName, conf.Version),
+	return  nil
 }
 
 // Add `Origin` in the Vary response header, to indicate to clients that server responses will differ based on the value
@@ -305,7 +305,7 @@ func (m *ModuleCors) monitorHandlers() map[string]interface{} {
 
 func (m *ModuleCors) reloadHandlers() map[string]interface{} {
 	handlers := map[string]interface{}{
-		m.name: m.loadRuleData,
+		m.name: m.LoadConfData,
 	}
 	return handlers
 }
@@ -322,7 +322,7 @@ func (m *ModuleCors) Init(cbs *bfe_module.BfeCallbacks, whs *web_monitor.WebHand
 	m.conf = conf
 	openDebug = conf.Log.OpenDebug
 
-	_, err = m.loadRuleData(nil)
+	err = m.LoadConfData(nil)
 	if err != nil {
 		return err
 	}

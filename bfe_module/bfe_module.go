@@ -18,6 +18,7 @@ package bfe_module
 
 import (
 	"fmt"
+	"net/url"
 	"path"
 )
 
@@ -34,8 +35,9 @@ type BfeModule interface {
 	// Name return name of module.
 	Name() string
 
+	LoadConfData(query url.Values) error
+
 	// Init initializes the module.
-	//
 	// Params:
 	//      - cbs: callback handlers. for register call back function
 	//      - whs: web monitor handlers. for register web monitor handler
@@ -46,16 +48,16 @@ type BfeModule interface {
 // moduleMap holds mappings from mod_name to module.
 var moduleMap = make(map[string]BfeModule)
 
-// modulesAll is an ordered list of all module names.
-var modulesAll = make([]string, 0)
+// ModulesAll is an ordered list of all module names.
+var ModulesAll = make([]string, 0)
 
 // modulesEnabled is list of enabled module names.
 var modulesEnabled = make([]string, 0)
 
-// AddModule adds module to moduleMap and modulesAll.
+// AddModule adds module to moduleMap and ModulesAll.
 func AddModule(module BfeModule) {
 	moduleMap[module.Name()] = module
-	modulesAll = append(modulesAll, module.Name())
+	ModulesAll = append(ModulesAll, module.Name())
 }
 
 type BfeModules struct {
@@ -95,8 +97,8 @@ func (bm *BfeModules) GetModule(name string) BfeModule {
 //     - cr : root path for config
 func (bm *BfeModules) Init(cbs *BfeCallbacks, whs *web_monitor.WebHandlers, cr string) error {
 	// go through ALL available module names
-	// It is IMPORTANT to do init by the order defined in modulesAll
-	for _, name := range modulesAll {
+	// It is IMPORTANT to do init by the order defined in ModulesAll
+	for _, name := range ModulesAll {
 		// check whether this module is enabled
 		module, ok := bm.workModules[name]
 		if ok {
@@ -141,7 +143,7 @@ func ModConfDir(confRoot string, modName string) string {
 // ModuleStatusGetJSON get modules Available and modules Enabled.
 func ModuleStatusGetJSON() ([]byte, error) {
 	status := make(map[string][]string)
-	status["available"] = modulesAll
+	status["available"] = ModulesAll
 	status["enabled"] = modulesEnabled
 	return json.Marshal(status)
 }

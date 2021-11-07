@@ -15,6 +15,7 @@
 package signal_table
 
 import (
+	"github.com/bfenetworks/bfe/bfe_modules"
 	"os"
 )
 
@@ -32,4 +33,12 @@ func TermHandler(s os.Signal) {
 // IgnoreHandler deal with the signal that should be ignored
 func IgnoreHandler(s os.Signal) {
 	log.Logger.Info("ignoreHandler(): receive signal[%v], ignore.", s)
+}
+
+//bfe_modules.SetModules()
+
+func SighubHandler(s os.Signal) {
+	log.Logger.Info("SighubHandler(): receive signal[%v], Sighub.", s)
+	bfe_modules.LoadconfModules()
+	log.Logger.Info("SighubHandler(): reload success[%v], Sighub.", s)
 }

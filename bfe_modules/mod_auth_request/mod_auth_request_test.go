@@ -35,7 +35,7 @@ const (
 	expectProduct = "example_product"
 )
 
-func TestLoadRuleData(t *testing.T) {
+func TestLoadConfData(t *testing.T) {
 	m := new(ModuleAuthRequest)
 	m.ruleTable = new(AuthRequestRuleTable)
 
@@ -44,7 +44,7 @@ func TestLoadRuleData(t *testing.T) {
 	}
 
 	expectModVersion := "auth_request_rule.data=auth_request_rule_version"
-	modVersion, err := m.loadRuleData(query)
+	modVersion, err := m.LoadConfData(query)
 	if err != nil {
 		t.Fatalf("should have no error, but error is %v", err)
 	}

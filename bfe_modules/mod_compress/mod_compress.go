@@ -76,7 +76,7 @@ func (m *ModuleCompress) Name() string {
 	return m.name
 }
 
-func (m *ModuleCompress) loadProductRuleConf(query url.Values) error {
+func (m *ModuleCompress) LoadConfData(query url.Values) error {
 	path := query.Get("path")
 	if path == "" {
 		path = m.conf.Basic.ProductRulePath
@@ -203,7 +203,7 @@ func (m *ModuleCompress) monitorHandlers() map[string]interface{} {
 
 func (m *ModuleCompress) reloadHandlers() map[string]interface{} {
 	handlers := map[string]interface{}{
-		m.name: m.loadProductRuleConf,
+		m.name: m.LoadConfData,
 	}
 	return handlers
 }
@@ -218,8 +218,8 @@ func (m *ModuleCompress) Init(cbs *bfe_module.BfeCallbacks, whs *web_monitor.Web
 	}
 	openDebug = m.conf.Log.OpenDebug
 
-	if err = m.loadProductRuleConf(nil); err != nil {
-		return fmt.Errorf("%s: loadProductRuleConf() err %v", m.name, err)
+	if err = m.LoadConfData(nil); err != nil {
+		return fmt.Errorf("%s: LoadConfData() err %v", m.name, err)
 	}
 
 	err = cbs.AddFilter(bfe_module.HandleReadResponse, m.compressHandler)

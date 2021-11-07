@@ -45,6 +45,7 @@ import (
 	"github.com/bfenetworks/bfe/bfe_modules/mod_waf"
 )
 
+// 加载和实现的时候需要对类型实现一致性
 // list of all modules, the order is very important
 var moduleList = []bfe_module.BfeModule{
 	// mod_trust_clientip
@@ -52,9 +53,11 @@ var moduleList = []bfe_module.BfeModule{
 
 	// mod_logid
 	// Requirement: After mod_trust_clientip
+	// 不存在对应的配置项
 	mod_logid.NewModuleLogId(),
 
 	// mode_userid
+	// 更改返回类型,删除了返回的 string 类型
 	mod_userid.NewModuleUserID(),
 
 	// mod_geo
@@ -72,6 +75,7 @@ var moduleList = []bfe_module.BfeModule{
 
 	// mod_block
 	// Requirement: After mod_logid
+	//  这里存在两个load 是一个需要处理的点
 	mod_block.NewModuleBlock(),
 
 	// mod_prison
@@ -92,6 +96,7 @@ var moduleList = []bfe_module.BfeModule{
 	mod_waf.NewModuleWaf(),
 
 	// mod_doh
+	// 如同logid 都是重新加载配置的方式不太一样
 	mod_doh.NewModuleDoh(),
 
 	// mod_redirect
@@ -123,9 +128,101 @@ var moduleList = []bfe_module.BfeModule{
 	mod_key_log.NewModuleKeyLog(),
 
 	// mod_http_code
+	//  LoadConfData nil
 	mod_http_code.NewModuleHttpCode(),
 
 	// mod_access
+	// load nil
+	mod_access.NewModuleAccess(),
+}
+
+
+var moduleL = []bfe_module.BfeModule{
+	// mod_trust_clientip
+	//mod_trust_clientip.,
+
+	// mod_logid
+	// Requirement: After mod_trust_clientip
+	// 不存在对应的配置项
+	mod_logid.NewModuleLogId(),
+
+	// mode_userid
+	// 更改返回类型,删除了返回的 string 类型
+	mod_userid.NewModuleUserID(),
+
+	// mod_geo
+	// Requirement: After mod_logid
+	mod_geo.NewModuleGeo(),
+
+	// mod_tag
+	mod_tag.NewModuleTag(),
+
+	// mod_trace
+	mod_trace.NewModuleTrace(),
+
+	// mod_cors
+	mod_cors.NewModuleCors(),
+
+	// mod_block
+	// Requirement: After mod_logid
+	//  这里存在两个load 是一个需要处理的点
+	mod_block.NewModuleBlock(),
+
+	// mod_prison
+	// Requirement: After mod_logid
+	mod_prison.NewModulePrison(),
+
+	// mod_auth_basic
+	// Requirement: before mod_static
+	mod_auth_basic.NewModuleAuthBasic(),
+
+	// mod_auth_jwt
+	mod_auth_jwt.NewModuleAuthJWT(),
+
+	// mod_secure_link
+	mod_secure_link.NewModuleSecureLink(),
+
+	// mod_waf
+	mod_waf.NewModuleWaf(),
+
+	// mod_doh
+	// 如同logid 都是重新加载配置的方式不太一样
+	mod_doh.NewModuleDoh(),
+
+	// mod_redirect
+	// Requirement: After mod_logid
+	mod_redirect.NewModuleRedirect(),
+
+	// mod_static
+	mod_static.NewModuleStatic(),
+
+	// mod_rewrite
+	mod_rewrite.NewModuleReWrite(),
+
+	// mod_header
+	mod_header.NewModuleHeader(),
+
+	// mod_auth_request
+	mod_auth_request.NewModuleAuthRequest(),
+
+	// mod_errors
+	mod_errors.NewModuleErrors(),
+
+	// mod_markdown
+	mod_markdown.NewModuleMarkdown(),
+
+	// mod_compress
+	mod_compress.NewModuleCompress(),
+
+	// mod_key_log
+	mod_key_log.NewModuleKeyLog(),
+
+	// mod_http_code
+	//  LoadConfData nil
+	mod_http_code.NewModuleHttpCode(),
+
+	// mod_access
+	// load nil
 	mod_access.NewModuleAccess(),
 }
 
@@ -140,3 +237,9 @@ func SetModules() {
 		bfe_module.AddModule(module)
 	}
 }
+//func LoadconfModules() {
+//	for _, name := range bfe_module.ModulesAll {
+//		module:= bfe_module.BfeModules.GetModule(name)
+//		module.LoadConfData(nil)
+//	}
+//}

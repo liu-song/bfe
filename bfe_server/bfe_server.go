@@ -345,7 +345,7 @@ func (srv *BfeServer) InitSignalTable() {
 	/* register signal handlers */
 	srv.SignalTable.Register(syscall.SIGQUIT, srv.ShutdownHandler)
 	srv.SignalTable.Register(syscall.SIGTERM, signal_table.TermHandler)
-	srv.SignalTable.Register(syscall.SIGHUP, signal_table.IgnoreHandler)
+	srv.SignalTable.Register(syscall.SIGHUP, signal_table.SighubHandler)
 	srv.SignalTable.Register(syscall.SIGILL, signal_table.IgnoreHandler)
 	srv.SignalTable.Register(syscall.SIGTRAP, signal_table.IgnoreHandler)
 	srv.SignalTable.Register(syscall.SIGABRT, signal_table.IgnoreHandler)

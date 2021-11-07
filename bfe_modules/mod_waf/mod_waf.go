@@ -71,7 +71,7 @@ func (m *ModuleWaf) Name() string {
 	return m.name
 }
 
-func (m *ModuleWaf) loadProductRuleConf(query url.Values) error {
+func (m *ModuleWaf) LoadConfData(query url.Values) error {
 	// get file path
 	path := query.Get("path")
 	if path == "" {
@@ -82,7 +82,7 @@ func (m *ModuleWaf) loadProductRuleConf(query url.Values) error {
 	// load from config file
 	conf, err := ProductWafRuleConfLoad(path)
 	if err != nil {
-		return fmt.Errorf("%s: loadProductRuleConf(%s) error: %v", m.name, path, err)
+		return fmt.Errorf("%s: LoadConfData(%s) error: %v", m.name, path, err)
 	}
 
 	// update to rule table
@@ -110,7 +110,7 @@ func (m *ModuleWaf) monitorHandlers() map[string]interface{} {
 
 func (m *ModuleWaf) reloadHandlers() map[string]interface{} {
 	handlers := map[string]interface{}{
-		m.name: m.loadProductRuleConf,
+		m.name: m.LoadConfData,
 	}
 	return handlers
 }
@@ -162,8 +162,8 @@ func (m *ModuleWaf) Init(cbs *bfe_module.BfeCallbacks, whs *web_monitor.WebHandl
 		return fmt.Errorf("%s: conf load err %v", m.name, err)
 	}
 
-	if err = m.loadProductRuleConf(nil); err != nil {
-		return fmt.Errorf("%s: loadProductRuleConf() err %v", m.Name(), err)
+	if err = m.LoadConfData(nil); err != nil {
+		return fmt.Errorf("%s: LoadConfData() err %v", m.Name(), err)
 	}
 
 	if err = m.handler.Init(m.conf); err != nil {

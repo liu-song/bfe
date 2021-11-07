@@ -29,7 +29,7 @@ import (
 	"github.com/bfenetworks/bfe/bfe_module"
 )
 
-func TestLoadRuleData(t *testing.T) {
+func TestLoadConfData(t *testing.T) {
 	m := new(ModuleTrace)
 	m.ruleTable = new(TraceRuleTable)
 
@@ -38,7 +38,7 @@ func TestLoadRuleData(t *testing.T) {
 	}
 
 	expectModVersion := "trace_rule.data=20200316215500"
-	modVersion, err := m.loadRuleData(query)
+	modVersion, err := m.LoadConfData(query)
 	if err != nil {
 		t.Fatalf("should have no error, but error is %v", err)
 	}

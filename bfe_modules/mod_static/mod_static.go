@@ -74,7 +74,7 @@ func (m *ModuleStatic) Name() string {
 	return m.name
 }
 
-func (m *ModuleStatic) loadConfData(query url.Values) error {
+func (m *ModuleStatic) LoadConfData(query url.Values) error {
 	path := query.Get("path")
 	if path == "" {
 		path = m.conf.Basic.DataPath
@@ -125,7 +125,7 @@ func (m *ModuleStatic) monitorHandlers() map[string]interface{} {
 
 func (m *ModuleStatic) reloadHandlers() map[string]interface{} {
 	handlers := map[string]interface{}{
-		m.name:                              m.loadConfData,
+		m.name:                              m.LoadConfData,
 		fmt.Sprintf("%s.mime_type", m.name): m.loadMimeType,
 	}
 	return handlers
@@ -279,8 +279,8 @@ func (m *ModuleStatic) Init(cbs *bfe_module.BfeCallbacks, whs *web_monitor.WebHa
 	openDebug = cfg.Log.OpenDebug
 	m.conf = cfg
 
-	if err = m.loadConfData(nil); err != nil {
-		return fmt.Errorf("err in loadConfData(): %v", err)
+	if err = m.LoadConfData(nil); err != nil {
+		return fmt.Errorf("err in LoadConfData(): %v", err)
 	}
 
 	if err = m.loadMimeType(nil); err != nil {

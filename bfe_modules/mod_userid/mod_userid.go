@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"math/rand"
 	"net/url"
-	"path/filepath"
 	"sync"
 	"time"
 )
@@ -70,13 +69,13 @@ func (m *ModuleUserID) Init(cbs *bfe_module.BfeCallbacks, whs *web_monitor.WebHa
 
 	openDebug = cfg.Log.OpenDebug
 	m.confFile = cfg.Basic.DataPath
-	if _, err := m.loadConfData(nil); err != nil {
+	if err := m.LoadConfData(nil); err != nil {
 		return fmt.Errorf("%s: conf load err %v", m.name, err)
 	}
 
 	// register handlers
-	if err := whs.RegisterHandler(web_monitor.WebHandleReload, m.name, m.loadConfData); err != nil {
-		return fmt.Errorf("%s.Init(): RegisterHandler(m.loadConfData): %s", m.name, err.Error())
+	if err := whs.RegisterHandler(web_monitor.WebHandleReload, m.name, m.LoadConfData); err != nil {
+		return fmt.Errorf("%s.Init(): RegisterHandler(m.LoadConfData): %s", m.name, err.Error())
 	}
 
 	if err := cbs.AddFilter(bfe_module.HandleFoundProduct, m.reqSetUid); err != nil {
@@ -90,7 +89,7 @@ func (m *ModuleUserID) Init(cbs *bfe_module.BfeCallbacks, whs *web_monitor.WebHa
 	return nil
 }
 
-func (m *ModuleUserID) loadConfData(query url.Values) (string, error) {
+func (m *ModuleUserID) LoadConfData(query url.Values) error{
 	path := m.confFile
 	if q := query.Get("path"); q != "" {
 		path = q
@@ -98,13 +97,11 @@ func (m *ModuleUserID) loadConfData(query url.Values) (string, error) {
 
 	config, err := NewConfigFromFile(path)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	m.setConfig(config)
-
-	_, fileName := filepath.Split(path)
-	return fmt.Sprintf("%s=%s", fileName, config.Version), nil
+	return   nil
 }
 
 func (m *ModuleUserID) setConfig(config *Config) {

@@ -51,7 +51,7 @@ mod_block的代码位于[/bfe_modules/mod_block](https://github.com/bfenetworks/
 
 ```golang
     // register web handler for reload
-    err = whs.RegisterHandler(web_monitor.WebHandleReload, m.name, m.loadConfData)
+    err = whs.RegisterHandler(web_monitor.WebHandleReload, m.name, m.LoadConfData)
     if err != nil {
       ...
     }

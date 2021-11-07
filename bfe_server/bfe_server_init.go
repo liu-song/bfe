@@ -31,6 +31,7 @@ func StartUp(cfg bfe_conf.BfeConfig, version string, confRoot string) error {
 	// set all available modules
 	bfe_modules.SetModules()
 
+
 	// create bfe server
 	bfeServer := NewBfeServer(cfg, confRoot, version)
 

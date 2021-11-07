@@ -47,7 +47,7 @@ Example: In the init function of mod_block, there is some logic as follows, used
 
 ```golang
     // register web handler for reload
-    err = whs.RegisterHandler(web_monitor.WebHandleReload, m.name, m.loadConfData)
+    err = whs.RegisterHandler(web_monitor.WebHandleReload, m.name, m.LoadConfData)
     if err != nil {
       ...
     }

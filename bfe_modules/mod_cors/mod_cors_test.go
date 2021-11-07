@@ -34,7 +34,7 @@ const (
 	expectProduct = "example_product"
 )
 
-func TestLoadRuleData(t *testing.T) {
+func TestLoadConfData(t *testing.T) {
 	m := NewModuleCors()
 
 	query := url.Values{
@@ -42,7 +42,7 @@ func TestLoadRuleData(t *testing.T) {
 	}
 
 	expectModVersion := "cors_rule.data=20200508210000"
-	modVersion, err := m.loadRuleData(query)
+	modVersion, err := m.LoadConfData(query)
 	if err != nil {
 		t.Fatalf("should have no error, but error is %v", err)
 	}
